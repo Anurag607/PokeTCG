@@ -1,7 +1,18 @@
+import React from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
+import { useNavigate } from 'react-router-dom';
 import "./styles/Home.css";
 
 export default function Home() {
+
+  const address = useAddress();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if(address) navigate('/game', {replace: true});
+  }, [address]);
+
   return (
     <div className="container">
       <main className="main">

@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
+import '../../styles/App.css'
 import Home from "./Home";
 import Room from "./Room";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
-import { useEffect } from "react";
 
 
 const socket = io("http://localhost:5000");

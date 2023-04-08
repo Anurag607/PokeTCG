@@ -10,6 +10,7 @@ const ConnectWalletBtn = () => {
                     side: 'bottom',
                 }} 
                 theme={"dark"}
+                className={"connectWalletBtn"}
             />
         </div>
     )

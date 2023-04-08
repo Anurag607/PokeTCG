@@ -28,3 +28,26 @@ body {
   color: #e7e8e8;
   background: #0f1318;
 }
+
+.connectWalletBtn {
+  margin: 0 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  height: 0.05rem;
+  /* width of the horizontal  scrollbar */
+  width: 0.15rem;
+  /* width of the vertical scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #e8e8e8;
+  /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #37474f;
+  border: 2px solid #37474f;
+  /* creates padding around scroll thumb */
+}

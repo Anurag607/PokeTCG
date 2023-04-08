@@ -1,16 +1,32 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import '../../styles/App.css'
 import Home from "./Home";
 import Room from "./Room";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
-
+import Navbar from "../../components/Navbar";
+import { useAddress } from "@thirdweb-dev/react";
+import { useNavigate } from 'react-router-dom';
 
 const socket = io("http://localhost:5000");
+
 function App() {
   const [roomid, setRoomid] = useState(null);
   const [player, setPlayer] = useState(1);
+
+  const address = useAddress();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if(!address) navigate('/', {replace: true});
+  }, [address]);
+
+  React.useEffect(() => {
+    if(!address) navigate('/', {replace: true});
+  }, []);
+
+
   useEffect(() => {
     if (roomid) {
       socket.emit("join-room", roomid);
@@ -42,20 +58,23 @@ function App() {
   }
   console.log(player, "player");
   return (
-    <div className='App'>
-      <ToastContainer />
-      {roomid ? (
-        <Room
-          notify={notify}
-          toast={toast}
-          currentPlayer={player}
-          socket={socket}
-          roomid={roomid}
-        />
-      ) : (
-        <Home setRoomid={setRoomid} />
-      )}
-    </div>
+    <>
+      <Navbar />
+      <div className='App'>
+        <ToastContainer />
+        {roomid ? (
+          <Room
+            notify={notify}
+            toast={toast}
+            currentPlayer={player}
+            socket={socket}
+            roomid={roomid}
+          />
+        ) : (
+          <Home setRoomid={setRoomid} />
+        )}
+      </div>
+    </>
   );
 }
 

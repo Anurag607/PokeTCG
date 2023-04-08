@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+
 export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const [playerChance, setPlayerChance] = useState(1);
   const [message, setMessage] = useState("Waiting For Player - 2 to Join");
@@ -168,6 +170,8 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
       toast.dismiss();
     };
   }, [message]);
+
+
   console.log(currentPlayer, playerChance, "currentPlayer", "playerChance");
 
   return (
@@ -193,7 +197,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
       <div className='room-body'>
         <p className='instructions'>{message}</p>
         {message === "Let's play" && <p>Player {playerChance}'s Turn</p>}
-        <div className='main'>
+        <div className='main-room'>
           <div className='player1'>
             <h4 className={playerChance == 1 ? "currentChance" : ""}>
               Player 1

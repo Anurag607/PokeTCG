@@ -6,15 +6,23 @@ import { Server } from 'socket.io'
 const app = express();
 app.use(cors());
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+  next();
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://poketcg.onrender.com",
+    origin: "*",
     methods: ["GET", "OPTIONS", "POST", "PUT"],
   },
   handlePreflightRequest: (req, res) => {
     res.writeHead(200, {
-      "Access-Control-Allow-Origin": "https://poketcg.onrender.com",
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "X-Requested-With",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Methods": "PUT, GET, POST, DELETE, OPTIONS",

@@ -45,7 +45,7 @@ export default function Home({ setRoomid }) {
         </div>
         {selected == "join" && (
           <form
-            className='join-room'
+            className='w-screen flex justify-center items-center mt-3'
             onSubmit={(e) => {
               e.preventDefault();
               setJoinRoomLoading(true);
@@ -57,10 +57,10 @@ export default function Home({ setRoomid }) {
           >
             <input
               type='text'
-              className='room-input'
+              className='bg-[#e8e8e8] px-4 py-2 rounded-md text-[#1d1a1b] font-bold'
               placeholder='Enter room id'
             />
-            <button className='join-btn' type='submit'>
+            <button className='btn-gradient ml-3' type='submit'>
               {joinRoomLoading ? "Loading.." : "Join"}
             </button>
           </form>

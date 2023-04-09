@@ -29,6 +29,8 @@ module.exports = {
         // => @media (max-width: 380px) { ... }
         "nav-bar": { 'max': '450px' },
         // => @media (max-width: 450px) { ... }
+        "nav-bar-2": { 'max': '600px' },
+        // => @media (max-width: 600px) { ... }
       },
     },
   },

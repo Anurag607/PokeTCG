@@ -3,14 +3,24 @@ import { createSlice } from "@reduxjs/toolkit";
 const selectedCardSlice = createSlice({
     name: 'selectedCard',
     initialState: {
-        selectedCard: {}
+        selectedCard: []
     },
     reducers: {
         mountCard: (state, action) => {
-            state.selectedCard = action.payload
+            let temp = state.selectedCard
+            let data = action.payload
+            let flag = false
+            temp.forEach((el, i) => {
+                if (el.player === data.player && el.id === data.id) {
+                    flag = true
+                    return;
+                }
+            })
+            if (!flag) temp.push(action.payload)
+            state.selectedCard = temp
         },
-        dismountCard: (state) => {
-            state.selectedCard = {}
+        dismountCard: (state, action) => {
+            state.selectedCard = []
         }
     },
 })

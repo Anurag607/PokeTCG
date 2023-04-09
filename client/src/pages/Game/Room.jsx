@@ -17,81 +17,15 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const dispatch = useDispatch();
   const { selectedCard } = useSelector(state => state.selectedCard)
 
+  useEffect(() => {
+    if(selectedCard.length > 0) {
+      alert(`Player: ${selectedCard[currentPlayer-1].player}, CardId: ${selectedCard[currentPlayer-1].id}`)
+    }
+  },[selectedCard])
+
   // Function for determining winner ...
   const winnerHandler = () => {
-    // check rows
-    for (let i = 0; i < 3; i++) {
-      if (
-        board[i][0] === board[i][1] &&
-        board[i][0] === board[i][2] &&
-        board[i][0] !== ""
-      ) {
-        if (board[i][0] === "X") {
-          setWinner(1);
-          setMessage("Player 1 Won the match");
-        } else {
-          setWinner(2);
-          setMessage("Player 2 Won the match");
-        }
-      }
-    }
-    // check columns
-    for (let i = 0; i < 3; i++) {
-      if (
-        board[0][i] === board[1][i] &&
-        board[0][i] === board[2][i] &&
-        board[0][i] !== ""
-      ) {
-        if (board[0][i] === "X") {
-          setWinner(1);
-          setMessage("Player 1 Won the match");
-        } else {
-          setWinner(2);
-          setMessage("Player 2 Won the match");
-        }
-      }
-    }
-    // check diagonals
-    if (
-      board[0][0] === board[1][1] &&
-      board[0][0] === board[2][2] &&
-      board[0][0] !== ""
-    ) {
-      if (board[0][0] === "X") {
-        setWinner(1);
-        setMessage("Player 1 Won the match");
-      } else {
-        setWinner(2);
-        setMessage("Player 2 Won the match");
-      }
-    }
-    if (
-      board[0][2] === board[1][1] &&
-      board[0][2] === board[2][0] &&
-      board[0][2] !== ""
-    ) {
-      if (board[0][2] === "X") {
-        setWinner(1);
-        setMessage("Player 1 Won the match");
-      } else {
-        setWinner(2);
-        setMessage("Player 2 Won the match");
-      }
-    }
 
-    // check draw
-    let draw = true;
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[i][j] === "") {
-          draw = false;
-        }
-      }
-    }
-    if (draw && winner === null) {
-      setWinner(0);
-      setMessage("Match Draww!!!");
-    }
   };
 
   // // OnClick handler for Play Button ...
@@ -137,27 +71,29 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   // OnClick handler for Card Button ...
   const cardHandler = (event) => {
     let target = event.currentTarget;
-    let player = target.dataset.player
-    target.style.translate = '0 1rem';
-
-    // alert(`player ${player}, card ${target.dataset.id}`)
+    let player = target.dataset.player;
     
-    if(player === 1) {
-      let cards = document.querySelectorAll('.card1');
-      console.log(cards);
+    if(player === '1') {
+      let cards = document.querySelectorAll('.card-1');
       cards.forEach((card,i) => {
         if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
+        else if(card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
+          card.style.translate = '0 1rem';
+          dispatch(mountCard({player, id: card.dataset.id}))
+        }
       })
     }
     
-    if(player === 2) {
-      let cards = document.querySelectorAll('.card2');
+    if(player === '2') {
+      let cards = document.querySelectorAll('.card-2');
       cards.forEach((card,i) => {
         if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
+        else if(card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
+          card.style.translate = '0 1rem';
+          dispatch(mountCard({player, id: card.dataset.id}))
+        }
       })
     }
-
-    dispatch(mountCard({player, id: target.dataset.id}))
   }
 
   // Functin for checking for winner when player alternates ...
@@ -296,7 +232,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('/card.jpg')`
+                    backgroundImage: `url(${currentPlayer !== 1} ? '/card.jpg' : '')`
                   }}
                   onClick={cardHandler}
                 />
@@ -333,7 +269,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('/card.jpg')`
+                    backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.image}')`
                   }}
                   onClick={cardHandler}
                 />

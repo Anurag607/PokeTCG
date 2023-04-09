@@ -29,11 +29,20 @@ html {
 
 body {
   color: #e7e8e8;
-  background: #0f1318;
+  /* background: #0f1318; */
+  background: linear-gradient(to bottom, #0f0c30, #0b0b34);
 }
 
 .connectWalletBtn {
   margin: 0 !important;
+}
+
+.btn-gradient {
+  color: #0f1318 !important;
+  font-weight: bold !important;
+  background-image: linear-gradient(-19deg, #a0b849, #54c3d7) !important;
+  outline: 0 !important;
+  border: 0 !important;
 }
 
 /* Scrollbar */

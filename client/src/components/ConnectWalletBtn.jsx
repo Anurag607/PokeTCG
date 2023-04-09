@@ -10,7 +10,7 @@ const ConnectWalletBtn = () => {
                     side: 'bottom',
                 }} 
                 theme={"dark"}
-                className={"connectWalletBtn"}
+                className={"connectWalletBtn btn-gradient"}
             />
         </div>
     )

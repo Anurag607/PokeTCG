@@ -20,12 +20,14 @@ export default function Home({ setRoomid }) {
   return (
     <>
       <div className='home'>
-        <div className={"flex justify-center items-center gap-14"}>
-          <div className={"flex justify-center items-center flex-wrap w-fit h-fit gap-6"}>
-            <button onClick={() => setSelected("create")}>
+        <div className={"flex justify-center items-center gap-14 w-screen"}>
+          <div className={"flex justify-center items-center flex-wrap w-fit h-fit gap-6 mt-[7.5rem]"}>
+            <button onClick={() => setSelected("create")} className="w-fit text-2xl btn-gradient">
               {createRoomLoading ? "Loading.." : "Create Room"}
             </button>
-            <button onClick={() => setSelected("join")}>Join Room</button>
+            <button onClick={() => setSelected("join")} className="w-fit text-2xl btn-gradient">
+              Join Room
+            </button>
           </div>
         </div>
         {selected == "join" && (

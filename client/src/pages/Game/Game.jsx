@@ -5,7 +5,7 @@ import Home from "./Home";
 import Room from "./Room";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Navbar2";
 import { useAddress } from "@thirdweb-dev/react";
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,6 @@ function App() {
   React.useEffect(() => {
     if(!address) navigate('/', {replace: true});
   }, []);
-
 
   useEffect(() => {
     if (roomid) {
@@ -56,7 +55,7 @@ function App() {
       theme: "dark",
     });
   }
-  console.log(player, "player");
+  // console.log(player, "player");
   return (
     <>
       <Navbar />

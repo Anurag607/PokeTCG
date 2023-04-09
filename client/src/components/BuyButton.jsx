@@ -8,6 +8,13 @@ export default function BuyButton(props) {
   const { mutateAsync: buyNow, isLoading, error } = useBuyNow(contract);
   const id=props.id;
   const amt=props.amt;
+
+  if(!error)
+    {
+            
+    }
+
+
   return (
     <Web3Button
       contractAddress={contractAddress}

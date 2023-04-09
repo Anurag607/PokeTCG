@@ -4,7 +4,7 @@ import '../styles/Marketplace.css'
 const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price}) => {
 
   return (
-    <div className="w-[22rem]">
+ 
       <div className="card" >
         <div className="flex justify-evenly">
           <p className="hp">
@@ -33,9 +33,6 @@ const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price}) => {
             </div>
           </div>
       </div>
-      {/* <button className="btn">Buy</button>  */}
-      
-    </div>
   )
 }
 

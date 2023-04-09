@@ -1,8 +1,26 @@
+.nft-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
 .card {
-    position: relative;
-    width: 100%;
+    /* position: relative; */
+    width: 350px;
     background-color: #ffffff;
     padding: 30px 20px;
+    height: 450px;
+    margin: 10px;
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
 }
@@ -10,7 +28,7 @@
 .card img {
     display: block;
     width: 180px;
-    max-height: 200px;
+    height: 200px;
     position: relative;
     margin: 20px auto;
 }

@@ -89,6 +89,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     console.log(target.dataset.id,target.dataset.player,currentPlayer,ready);
     
     if (winner===null && ready) {
+      if (currentPlayer === player-'0') target.style.translate = "0 1.1rem";
       console.log(player,currentPlayer);
       if(player == 1 && currentPlayer==1) {
         let cards = document.querySelectorAll('.card-1');
@@ -305,7 +306,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
             <h4 className={playerChance == 1 ? "currentChance" : ""}>
               Player 1
             </h4>
-            <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
+            <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-4'>
               {(currentPlayer===1 ? uC1 : empCards).map((el,i) => {
               return (
                 <div key={i} 
@@ -316,12 +317,12 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                   data-id={i+1} 
                   data-player={1}
                   className={classNames({
-                    'card-1 flex ': true,
-                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'card-1': true,
+                    'w-[8.75rem] h-[12rem] cursor-default': true,
                     'bg-white shadow-md rounded-md': true,
                     'bg-center bg-cover bg-no-repeat': true,
                     'transition all ease-in-out duration-300': true,
-                    'hover:scale-110': true,
+                    'hover:scale-110': false,
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
@@ -367,10 +368,10 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
             'max-sm:w-fit max-sm:mr-[10rem]': true,
             "card:items-start card:w-[90vw]": true,
           })}>
-            <h4 className={playerChance == 2 ? "currentChance" : "" + 'flex w-full justify-end card:justify-start'}>
+            <h4 className={playerChance == 2 ? "currentChance" : "" + 'flex w-full justify-end card:justify-start max-md:mt-[10rem] card-2:mt-[32.5rem]'}>
               Player 2
             </h4>
-            <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
+            <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3 pb-[10rem]'>
             {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
               return (
                 <div key={i} 
@@ -382,12 +383,13 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                   data-player={2}
                   className={classNames({
                     'card-1 flex ': true,
-                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'w-[8.75rem] h-[12rem] cursor-default': true,
                     'bg-white shadow-md rounded-md': true,
                     'bg-center bg-cover bg-no-repeat': true,
                     'transition all ease-in-out duration-300': true,
-                    'hover:scale-110': true,
+                    'hover:scale-110': false,
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
+                    '':true,
                   })} 
                   style={{
                     backgroundImage: "url('/card.jpg')",

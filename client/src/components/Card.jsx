@@ -6,7 +6,7 @@ const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price, hidde
 
   return (
       <>
-      <div className="card" style={{display: `${hidden ? 'none' : ''}`, backgroundImage: `${hidden ? '' : bg}` }}>
+      <div className="card hover:scale-110 transition duration-300 ease-in-out cursor-pointer" style={{display: `${hidden ? 'none' : ''}`, backgroundImage: `${hidden ? '' : bg}` }}>
         <div className="flex justify-evenly w-full">
           <p className="hp">
                 {price}

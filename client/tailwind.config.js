@@ -25,6 +25,8 @@ module.exports = {
         // => @media (max-width: 700px) { ... }
         "card": { 'max': '507px' },
         // => @media (max-width: 507px) { ... }
+        "card-2": { 'max': '518px' },
+        // => @media (max-width: 518px) { ... }
         "mobile": { 'max': '380px' },
         // => @media (max-width: 380px) { ... }
         "nav-bar": { 'max': '450px' },

@@ -7,6 +7,7 @@ import {useDispatch, useSelector } from "react-redux";
 import { setUserNFTs } from "../../../redux/reducers/userNFTs.mjs";
 import Card from "../../components/Card";
 import BuyButton from "../../components/BuyButton";
+import { useNavigate } from "react-router-dom";
 
 export default function Home({ setRoomid }) {
   const [selected, setSelected] = useState(null);
@@ -18,6 +19,7 @@ export default function Home({ setRoomid }) {
   const [userNFTs, setUserNFTS] = useState([1]);
   const { contract } = useContract("0x2ED184a348935C941F821B2ac142db9C9c33EBe0","marketplace");
   const {data , isLoading, error} = useListings(contract);
+  const navigate = useNavigate()
 
   console.log(data);
 

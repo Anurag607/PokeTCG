@@ -7,7 +7,8 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "https://poketcg.onrender.com",
+    methods: ["GET", "POST"]
   },
 });
 io.on("connection", (server) => {

@@ -1,12 +1,13 @@
 import React from 'react'
 import '../styles/Marketplace.css'
+import bg from '../../Public/card.jpg'
 
-const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price}) => {
+const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price, hidden}) => {
 
   return (
- 
-      <div className="card" >
-        <div className="flex justify-evenly">
+      <>
+      <div className="card" style={{display: `${hidden ? 'none' : ''}`, backgroundImage: `${hidden ? '' : bg}` }}>
+        <div className="flex justify-evenly w-full">
           <p className="hp">
                 {price}
               <span> MATIC</span>
@@ -18,7 +19,7 @@ const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price}) => {
         </div>
           <img src={imgSrc} />
           <h1 className="poke-name">{pokeName}</h1>
-          <div className="stats">
+          <div className="stats flex justify-evenly w-full">
             <div>
               <h3>{statAttack}</h3>
               <p>Attack</p>
@@ -33,6 +34,8 @@ const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price}) => {
             </div>
           </div>
       </div>
+      </>
+
   )
 }
 

@@ -17,7 +17,7 @@ const MarketPlace = () => {
 
         {!data ? <div>Loading...</div> : data.map((pokemon) => {
             return (
-              <div className="nft-container">
+              <div className="flex flex-col justify-center items-center gap-1 mb-10">
                 <Card pokeName={pokemon.asset.name} imgSrc={pokemon.asset.image} hp={pokemon.asset.attributes[0].value} statAttack={pokemon.asset.attributes[1].value} statDefense={pokemon.asset.attributes[2].value} statSpeed={pokemon.asset.attributes[3].value} price={pokemon.buyoutCurrencyValuePerToken.displayValue}/>
                 <BuyButton id={pokemon.asset.id} amt="1" />
               </div>

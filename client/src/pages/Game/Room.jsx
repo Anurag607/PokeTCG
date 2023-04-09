@@ -233,6 +233,10 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     // }
     return cards
   }
+
+  useEffect(() => {
+    notify(`Player ${playerChance}'s Turn`);
+  }, [playerChance])
   
   // const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
   // console.log(card2);
@@ -304,14 +308,16 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
               {(currentPlayer===1 ? uC1 : empCards).map((el,i) => {
               return (
-                <>
-                <div 
+                <div key={i} 
+                  data-id={i+1} 
+                  data-player={1} onClick={cardHandler}>
+                {(currentPlayer===1) ? <Card hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} /> : <div 
                   key={i} 
                   data-id={i+1} 
                   data-player={1}
                   className={classNames({
                     'card-1 flex ': true,
-                    // 'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
                     'bg-white shadow-md rounded-md': true,
                     'bg-center bg-cover bg-no-repeat': true,
                     'transition all ease-in-out duration-300': true,
@@ -319,15 +325,34 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
-                    width: "25%"
+                    backgroundImage: "url('/card.jpg')",
+                    // backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
                   }}
                   onClick={cardHandler}
-                >
-                  {/* hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price */}
-                  <Card key={i} hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} />
+                />}
+                {/* <Card hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} hidden={(currentPlayer!==1 && (board[1][0]!=(i+1) && board[1][0]!=(i+1) && board[1][0]!=(i+1))) ? true : false} /> */}
+                {/* <div 
+                  key={i} 
+                  data-id={i+1} 
+                  data-player={1}
+                  className={classNames({
+                    'card-1 flex ': true,
+                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'bg-white shadow-md rounded-md': true,
+                    'bg-center bg-cover bg-no-repeat': true,
+                    'transition all ease-in-out duration-300': true,
+                    'hover:scale-110': true,
+                    'mobile:w-[7rem] mobile:h-[10rem]': true,
+                  })} 
+                  style={{
+                    backgroundImage: url('/card.jpg'),
+                    // backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
+                  }}
+                  onClick={cardHandler}
+                > */}
+                  {/* <Card key={i} hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} hidden={true} /> */}
+                {/* </div> */}
                 </div>
-                </>
 
               )
             })}
@@ -346,10 +371,37 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 2
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
+            {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
               return (
-                
-                <div 
+                <div key={i} 
+                  data-id={i+1} 
+                  data-player={2} onClick={cardHandler}>
+                {(currentPlayer===2) ? <Card hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} /> : <div 
+                  key={i} 
+                  data-id={i+1} 
+                  data-player={2}
+                  className={classNames({
+                    'card-1 flex ': true,
+                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'bg-white shadow-md rounded-md': true,
+                    'bg-center bg-cover bg-no-repeat': true,
+                    'transition all ease-in-out duration-300': true,
+                    'hover:scale-110': true,
+                    'mobile:w-[7rem] mobile:h-[10rem]': true,
+                  })} 
+                  style={{
+                    backgroundImage: "url('/card.jpg')",
+                    // backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
+                  }}
+                  // onClick={cardHandler}
+                />}
+              {/* {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
+              return (
+                <div key={i} 
+                  data-id={i+1} 
+                  data-player={2} onClick={cardHandler} >
+                <Card hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} hidden={(currentPlayer!==2 && (board[0][0]!=(i+1) && board[0][0]!=(i+1) && board[0][0]!=(i+1))) ? true : false}  /> */}
+                {/* <div 
                   key={i} 
                   data-id={i+1} 
                   data-player={2}
@@ -363,10 +415,11 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.imgSrc}')`
+                    backgroundImage: `url('${(currentPlayer !== 2) ? '/card.jpg' : ''}')`,
                   }}
                   onClick={cardHandler}
-                />
+                /> */}
+                </div>
               )
             })}
             </div>

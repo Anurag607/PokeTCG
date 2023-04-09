@@ -24,10 +24,14 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const registerUserNFTs = async (user_addr, nfts) => {
+  let data = await getUserNFTs(user_addr);
+  console.log(data);
+  
   await setDoc(doc(db, "users", user_addr), {
     user_addr: user_addr,
     nfts: nfts
   });
+
 }
 
 const getUserNFTs = async (user_addr) => {
@@ -39,7 +43,10 @@ const getUserNFTs = async (user_addr) => {
     return docSnap.data();
   } else {
     console.log("No such document!");
-    return null;
+    let placeholder = {
+    user_addr: user_addr,
+    nfts: []}
+    return placeholder;
   }
 }
 

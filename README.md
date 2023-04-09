@@ -32,7 +32,7 @@ To run the project locally, you need to have npm installed on your computer. Aft
 ### Clone the repository
 - Install the dependencies using npm install in client and server folder separately
 - Run the client development server using - `npm run dev`
-- Run the backend development server using - `nodemon index.js`
+- Run the backend development server using - `node index.js`
 
 
 

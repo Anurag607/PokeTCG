@@ -18,18 +18,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const dispatch = useDispatch();
   const { selectedCard } = useSelector(state => state.selectedCard)
 
-  useEffect(() => {
-    if(selectedCard.length > 0) {
-      alert(`Player: ${selectedCard[currentPlayer-1].player}, CardId: ${selectedCard[currentPlayer-1].id}`)
-    }
-  },[selectedCard])
-
-  useEffect(() => {
-    if(selectedCard.length > 0) {
-      alert(`Player: ${selectedCard[currentPlayer-1].player}, CardId: ${selectedCard[currentPlayer-1].id}`)
-    }
-  },[selectedCard])
-
   // const card1 = selectedCard[0];
   // const card2 = selectedCard[1];
 
@@ -196,9 +184,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const cards1 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
   const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
 
-  console.log(cards1);
-  console.log(cards2);
-
   return (
     <div className='py-[2rem] w-screen h-fit'>
       
@@ -266,7 +251,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               return (
                 <div 
                   key={i} 
-                  data-id={i} 
+                  data-id={i+1} 
                   data-player={1}
                   className={classNames({
                     'card-1 flex flex-grow-1': true,
@@ -303,7 +288,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               return (
                 <div 
                   key={i} 
-                  data-id={i} 
+                  data-id={i+1} 
                   data-player={2}
                   className={classNames({
                     'card-2 flex flex-grow-1': true,

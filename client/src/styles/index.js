@@ -9,9 +9,9 @@ const styles = {
   glassEffect: 'bg-white backdrop-filter backdrop-blur-lg bg-opacity-10',
 
   // hoc page
-  hocContainer: 'min-h-screen flex xl:flex-row flex-col relative',
+  hocContainer: 'min-h-screen flex xl:flex-row flex-col relative ml-10',
   hocContentBox: 'flex flex-1 justify-between bg-siteblack py-8 sm:px-12 px-8 flex-col',
-  hocLogo: 'w-[160px] h-[52px] object-contain cursor-pointer',
+  hocLogo: 'w-[270px] h-[82px] object-contain cursor-pointer mt-10',
   hocBodyWrapper: 'flex-1 flex justify-center flex-col xl:mt-0 my-16',
 
   // join battle page

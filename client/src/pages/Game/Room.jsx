@@ -38,6 +38,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   // Function for determining winner ...
   const winnerHandler = () => {
     let allTk = 1;
+    console.log(board);
     for (let i = 0; i < 2; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[i][j]===0) allTk = 0;
@@ -46,17 +47,19 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     if (allTk) {
       let p1 = 0;
       let p2 = 0;
+      console.log(uC1);
+      console.log(uC2);
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
           if (board[0][i]===board[1][j]){
-            const card1 = selectedCard[i];
+            const card1 = uC1[board[0][i]-1];
             p1 = p1 + (card1.hp+card1.statAttack+card1.statDefense+card1.statSpeed)/4;
-            const card2 = selectedCard[i];
+            const card2 = uC2[board[0][i]+2];
             p2 = p2 + (card2.hp+card2.statAttack+card2.statDefense+card2.statSpeed)/4;
           }
         }
       }
-      if (sc1>sc2){
+      if (p1>p2){
         setWinner(1);
         setMessage("Player 1 Won the match");
       }
@@ -84,38 +87,49 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     console.log(target.dataset.id,target.dataset.player,currentPlayer,ready);
     
     if (winner===null && ready) {
-      console.log(target.dataset.player,currentPlayer,ready);
-      if(player === '1' && currentPlayer==='1') {
+      console.log(player,currentPlayer);
+      if(player == 1 && currentPlayer==1) {
         let cards = document.querySelectorAll('.card-1');
-        let id = target.dataset.id;
+        let id = target.dataset.id-1;
+
         let last = 0;
-        for (let i = 0; i < board[2].length; i++) {
-          const el = board[2][i];
+        for (let i = 0; i < board[1].length; i++) {
+          const el = board[1][i];
           if (el>last) last = el;
         }
+        last+=1;
+        console.log(id,last,board[0][id]);
         if (board[0][id]===0){
           const newBoard = board;
-          newBoard[0][id] = el;
+          newBoard[0][id] = last;
           setBoard(newBoard);
           setPlayerChance(2);
           // dispatch(dismountCard());
         }
+        else{
+          notify("Card Already Taken");
+        }
 
       }
-      else if(player === '2'  && currentPlayer==='2') {
+      else if(player == 2  && currentPlayer==2) {
         let cards = document.querySelectorAll('.card-2');
-        let id = target.dataset.id;
+        let id = target.dataset.id-1;
         let last = 0;
-        for (let i = 0; i < board[2].length; i++) {
-          const el = board[2][i];
+        for (let i = 0; i < board[1].length; i++) {
+          const el = board[1][i];
           if (el>last) last = el;
         }
+        last+=1;
+        console.log(id,last,board[0][id]);
         if (board[1][id]===0){
           const newBoard = board;
-          newBoard[1][id] = el;
+          newBoard[1][id] = last;
           setBoard(newBoard);
           setPlayerChance(1);
           // dispatch(dismountCard());
+        }
+        else{
+          notify("Card Already Taken");
         }
         // cards.forEach((card,i) => {
         //   // if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
@@ -131,10 +145,11 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     
   }
 
-  let cards1;
+  let cards1 =[];
   useEffect(()=>{
     cards1 = getRandomIndex(sortedpokeData);
-    console.log(cards1);
+    // console.log(uC1);
+    // console.log(uC2);
   },[]);
 
   // Functin for checking for winner when player alternates ...
@@ -158,9 +173,8 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     });
     socket.on("reset-board", () => {
       setBoard([
-        ["", "", ""],
-        ["", "", ""],
-        ["", "", ""],
+        [0, 0, 0],
+        [0, 0, 0]
       ]);
       setPlayerChance(1);
       setWinner(null);
@@ -189,9 +203,8 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     };
   }, [message]);
 
-  // console.log(currentPlayer, playerChance, "currentPlayer", "playerChance");
 
-  const cards = new Array(3).fill(1);
+  const empCards = new Array(3).fill(1);
 
   function getRandomIndex() {
     let taken = [];
@@ -208,9 +221,12 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
       }
     }
     setuC1(cards);
-    // if (currentPlayer===1) {
-    // }
-    // else{
+    let crd = uC1;
+    for (let i = 0; i < cards.length; i++) {
+      crd.push(cards[i]);
+    }
+    setuC2(crd);
+    // if (currentPlayer==2) {
     //   setuC2(cards);
     // }
     return cards
@@ -221,6 +237,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
 
   return (
     <div className='py-[2rem] w-screen h-fit'>
+    {/* {console.log({board})}; */}
       {/* {console.log(uC1)};
       {console.log(uC2)}; */}
       {/* Header Section (Details) ... */}
@@ -283,7 +300,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 1
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {uC1.map((el,i) => {
+              {(currentPlayer===1 ? uC1 : empCards).map((el,i) => {
               return (
                 <div 
                   key={i} 
@@ -320,7 +337,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 2
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {cards.map((el,i) => {
+              {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
               return (
                 <div 
                   key={i} 
@@ -336,7 +353,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
+                    backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.imgSrc}')`
                   }}
                   onClick={cardHandler}
                 />

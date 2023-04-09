@@ -9,7 +9,7 @@ import Navbar from "../../components/Navbar2";
 import { useAddress } from "@thirdweb-dev/react";
 import { useNavigate } from 'react-router-dom';
 
-const socket = io("http://127.0.0.1:5173");
+const socket = io("http://localhost:5001");
 
 function App() {
   const [roomid, setRoomid] = useState(null);

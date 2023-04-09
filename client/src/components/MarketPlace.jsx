@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useContract, useListings } from "@thirdweb-dev/react";
 import Card from './Card'
-import Navbar from './Navbar2';
+import Navbar from './Navbar';
 import BuyButton from './BuyButton';
 import '../styles/Marketplace.css'
 

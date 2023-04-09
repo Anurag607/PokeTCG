@@ -10,11 +10,9 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const [message, setMessage] = useState("Waiting For Player - 2 to Join");
   const [ready, setReady] = useState(false);
   const [winner, setWinner] = useState(null);
-  const [board, setBoard] = useState([
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ]);
+  const [board, setBoard] = useState([[0,0,0],[0,0,0]]);
+  const [uC1,setuC1] = useState([]);
+  const [uC2,setuC2] = useState([]);
   const dispatch = useDispatch();
   const { selectedCard } = useSelector(state => state.selectedCard)
 
@@ -39,47 +37,34 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   }
   // Function for determining winner ...
   const winnerHandler = () => {
-    let p1 = (card1.hp+card1.statAttack+card1.statDefense+card1.statSpeed)/4;
-    let p2 = (card2.hp+card2.statAttack+card2.statDefense+card2.statSpeed)/4;
-    if (p1>p2){
-      setWinner(1);
-      setMessage("Player 1 Won the match");
+    let allTk = 1;
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j]===0) allTk = 0;
+      }
     }
-    else{
-      setWinner(2);
-      setMessage("Player 2 Won the match");
-    }
-    dispatch(dismountCard());
-  };
-
-  // // OnClick handler for Play Button ...
-  const playHandler = (col, i, j) => {
-    if (
-      col === "" &&
-      winner === null &&
-      playerChance === currentPlayer &&
-      ready
-    ) {
-      const newBoard = board;
-      newBoard[i][j] = playerChance === 1 ? "X" : "O";
-      setBoard(newBoard);
-      setPlayerChance(playerChance === 1 ? 2 : 1);
-    } else if (ready === false) {
-      notify("Waiting for Player - 2 to join");
-    } else if (
-      col !== "" &&
-      winner === null &&
-      playerChance !== currentPlayer
-    ) {
-      notify("Cell Already Filled");
-    } else if (
-      col === "" &&
-      winner === null &&
-      playerChance !== currentPlayer
-    ) {
-      notify("Not Your Chance");
-    } else if (winner !== null) {
-      notify("Match Over");
+    if (allTk) {
+      let p1 = 0;
+      let p2 = 0;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (board[0][i]===board[1][j]){
+            const card1 = selectedCard[i];
+            p1 = p1 + (card1.hp+card1.statAttack+card1.statDefense+card1.statSpeed)/4;
+            const card2 = selectedCard[i];
+            p2 = p2 + (card2.hp+card2.statAttack+card2.statDefense+card2.statSpeed)/4;
+          }
+        }
+      }
+      if (sc1>sc2){
+        setWinner(1);
+        setMessage("Player 1 Won the match");
+      }
+      else{
+        setWinner(2);
+        setMessage("Player 2 Won the match");
+      }
+      dispatch(dismountCard());
     }
   };
 
@@ -96,29 +81,61 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const cardHandler = (event) => {
     let target = event.currentTarget;
     let player = target.dataset.player;
+    console.log(target.dataset.id,target.dataset.player,currentPlayer,ready);
     
-    if(player === '1') {
-      let cards = document.querySelectorAll('.card-1');
-      cards.forEach((card,i) => {
-        if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
-        else if(card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
-          card.style.translate = '0 1rem';
-          dispatch(mountCard({player, id: card.dataset.id}))
+    if (winner===null && ready) {
+      console.log(target.dataset.player,currentPlayer,ready);
+      if(player === '1' && currentPlayer==='1') {
+        let cards = document.querySelectorAll('.card-1');
+        let id = target.dataset.id;
+        let last = 0;
+        for (let i = 0; i < board[2].length; i++) {
+          const el = board[2][i];
+          if (el>last) last = el;
         }
-      })
+        if (board[0][id]===0){
+          const newBoard = board;
+          newBoard[0][id] = el;
+          setBoard(newBoard);
+          setPlayerChance(2);
+          // dispatch(dismountCard());
+        }
+
+      }
+      else if(player === '2'  && currentPlayer==='2') {
+        let cards = document.querySelectorAll('.card-2');
+        let id = target.dataset.id;
+        let last = 0;
+        for (let i = 0; i < board[2].length; i++) {
+          const el = board[2][i];
+          if (el>last) last = el;
+        }
+        if (board[1][id]===0){
+          const newBoard = board;
+          newBoard[1][id] = el;
+          setBoard(newBoard);
+          setPlayerChance(1);
+          // dispatch(dismountCard());
+        }
+        // cards.forEach((card,i) => {
+        //   // if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
+        //   // else 
+        //   if (card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
+        //     card.style.translate = '0 1rem';
+        //     dispatch(mountCard({player, id: card.dataset.id}))
+        //   }
+        // })
+      }
+      
     }
     
-    if(player === '2') {
-      let cards = document.querySelectorAll('.card-2');
-      cards.forEach((card,i) => {
-        if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
-        else if(card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
-          card.style.translate = '0 1rem';
-          dispatch(mountCard({player, id: card.dataset.id}))
-        }
-      })
-    }
   }
+
+  let cards1;
+  useEffect(()=>{
+    cards1 = getRandomIndex(sortedpokeData);
+    console.log(cards1);
+  },[]);
 
   // Functin for checking for winner when player alternates ...
   useEffect(() => {
@@ -159,7 +176,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
 
   // Notification and Loader Delta W.R.T message ...
   useEffect(() => {
-
     // Loader Display ..
     let loader = document.querySelector('#loader');
     if(message === "Waiting For Player - 2 to Join") {
@@ -177,16 +193,36 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
 
   const cards = new Array(3).fill(1);
 
-  function getRandomIndex(array) {
-    return Math.floor(Math.random() * array.length);
+  function getRandomIndex() {
+    let taken = [];
+    let cards = []
+    while (taken.length!==3) {
+      let ind = Math.floor(Math.random() * sortedpokeData.length);
+      let fl = 1
+      for (let i = 0; i < taken.length; i++) {
+        if (taken[i]===ind) fl = 0;
+      }
+      if (fl){
+        taken.push(ind);
+        cards.push(sortedpokeData[ind]);
+      }
+    }
+    setuC1(cards);
+    // if (currentPlayer===1) {
+    // }
+    // else{
+    //   setuC2(cards);
+    // }
+    return cards
   }
-
-  const cards1 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
-  const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
+  
+  // const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
+  // console.log(card2);
 
   return (
     <div className='py-[2rem] w-screen h-fit'>
-      
+      {/* {console.log(uC1)};
+      {console.log(uC2)}; */}
       {/* Header Section (Details) ... */}
       <section className={classNames({
         'relative h-fit flex justify-between items-center w-screen px-10 mb-6': true,
@@ -222,9 +258,9 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
             </code>
           </h3>
           {/* Reset Button ... */}
-          <button className='text-md max-sm:text-sm' onClick={resethandler}>
+          {/* <button className='text-md max-sm:text-sm' onClick={resethandler}>
             Reset the board
-          </button>
+          </button> */}
         </div>
       </section>
       
@@ -247,7 +283,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 1
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {cards1.map((el,i) => {
+              {uC1.map((el,i) => {
               return (
                 <div 
                   key={i} 
@@ -284,7 +320,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 2
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {cards2.map((el,i) => {
+              {cards.map((el,i) => {
               return (
                 <div 
                   key={i} 

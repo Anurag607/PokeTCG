@@ -63,14 +63,21 @@ export default function Home({ setRoomid }) {
   return (
     <Fade cascade>
       <div className='home'>
-        <div className={"flex justify-center items-center gap-14 w-screen"}>
-          <div className={"flex justify-center items-center flex-wrap w-fit h-fit gap-6 mt-[7.5rem]"}>
-            <button onClick={() => setSelected("create")} className="w-fit text-2xl btn-gradient">
-              {createRoomLoading ? "Loading.." : "Create Room"}
-            </button>
-            <button onClick={() => setSelected("join")} className="w-fit text-2xl btn-gradient">
-              Join Room
-            </button>
+      <div className={"flex justify-center items-center gap-14 w-screen"}>
+          <div className={"flex justify-center items-center w-screen flex-wrap px-10"}>
+            <div className={"flex justify-between items-center flex-wrap w-screen h-fit gap-6 mt-[7.5rem]"}>
+              <div className={"flex gap-2"}>
+                  <button onClick={() => setSelected("create")} className="w-fit text-xl btn-gradient">
+                    {createRoomLoading ? "Loading.." : "Create Room"}
+                  </button>
+                  <button onClick={() => setSelected("join")} className="w-fit text-xl btn-gradient">
+                    Join Room
+                  </button>    
+              </div>          
+              <button onClick={() => navigate('/marketplace', {replace: true})} className="w-fit text-xl btn-gradient">
+                MarketPlace
+              </button>  
+            </div>
           </div>
         </div>
         {selected == "join" && (
@@ -100,7 +107,7 @@ export default function Home({ setRoomid }) {
         {userNFTs && data && userNFTs.map((index) => {
           return (
             <div className="flex flex-col justify-center items-center gap-1 mb-10">
-              <Card pokeName={data[0].asset.name} imgSrc={data[index].asset.image} hp={data[index].asset.attributes[0].value} statAttack={data[index].asset.attributes[1].value} statDefense={data[index].asset.attributes[2].value} statSpeed={data[index].asset.attributes[3].value} price={data[index].buyoutCurrencyValuePerToken.displayValue}/>
+              <Card pokeName={data[index].asset.name} imgSrc={data[index].asset.image} hp={data[index].asset.attributes[0].value} statAttack={data[index].asset.attributes[1].value} statDefense={data[index].asset.attributes[2].value} statSpeed={data[index].asset.attributes[3].value} price={data[index].buyoutCurrencyValuePerToken.displayValue}/>
             </div>
           )
         })}

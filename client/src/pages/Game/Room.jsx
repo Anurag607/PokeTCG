@@ -300,7 +300,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
+                    backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.imgSrc}')`
                   }}
                   onClick={cardHandler}
                 />

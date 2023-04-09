@@ -1,0 +1,71 @@
+.card {
+    position: relative;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 30px 20px;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.card img {
+    display: block;
+    width: 180px;
+    max-height: 200px;
+    position: relative;
+    margin: 20px auto;
+}
+
+.hp {
+    width: fit-content;
+    background-color: #19b1c2;
+    text-align: center;
+    padding: 8px 10px;
+    display: inline;
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+.poke-name {
+    color: black;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+.hp span {
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+}
+
+.stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.stats h3 {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.stats p {
+    display: inline;
+    color: #404060;
+    ;
+}
+
+.btn {
+    display: block;
+    padding: 15px 60px;
+    font-size: 18px;
+    background-color: #ffffff;
+    color: black;
+    position: relative;
+    margin: 30px auto;
+    border: none;
+    border-radius: 20px;
+}

@@ -11,11 +11,9 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const [message, setMessage] = useState("Waiting For Player - 2 to Join");
   const [ready, setReady] = useState(false);
   const [winner, setWinner] = useState(null);
-  const [board, setBoard] = useState([
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ]);
+  const [board, setBoard] = useState([[0,0,0],[0,0,0]]);
+  const [uC1,setuC1] = useState([]);
+  const [uC2,setuC2] = useState([]);
   const dispatch = useDispatch();
   const { selectedCard } = useSelector(state => state.selectedCard)
 
@@ -40,47 +38,37 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   }
   // Function for determining winner ...
   const winnerHandler = () => {
-    let p1 = (card1.hp+card1.statAttack+card1.statDefense+card1.statSpeed)/4;
-    let p2 = (card2.hp+card2.statAttack+card2.statDefense+card2.statSpeed)/4;
-    if (p1>p2){
-      setWinner(1);
-      setMessage("Player 1 Won the match");
+    let allTk = 1;
+    console.log(board);
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j]===0) allTk = 0;
+      }
     }
-    else{
-      setWinner(2);
-      setMessage("Player 2 Won the match");
-    }
-    dispatch(dismountCard());
-  };
-
-  // // OnClick handler for Play Button ...
-  const playHandler = (col, i, j) => {
-    if (
-      col === "" &&
-      winner === null &&
-      playerChance === currentPlayer &&
-      ready
-    ) {
-      const newBoard = board;
-      newBoard[i][j] = playerChance === 1 ? "X" : "O";
-      setBoard(newBoard);
-      setPlayerChance(playerChance === 1 ? 2 : 1);
-    } else if (ready === false) {
-      notify("Waiting for Player - 2 to join");
-    } else if (
-      col !== "" &&
-      winner === null &&
-      playerChance !== currentPlayer
-    ) {
-      notify("Cell Already Filled");
-    } else if (
-      col === "" &&
-      winner === null &&
-      playerChance !== currentPlayer
-    ) {
-      notify("Not Your Chance");
-    } else if (winner !== null) {
-      notify("Match Over");
+    if (allTk) {
+      let p1 = 0;
+      let p2 = 0;
+      console.log(uC1);
+      console.log(uC2);
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (board[0][i]===board[1][j]){
+            const card1 = uC1[board[0][i]-1];
+            p1 = p1 + (card1.hp+card1.statAttack+card1.statDefense+card1.statSpeed)/4;
+            const card2 = uC2[board[0][i]+2];
+            p2 = p2 + (card2.hp+card2.statAttack+card2.statDefense+card2.statSpeed)/4;
+          }
+        }
+      }
+      if (p1>p2){
+        setWinner(1);
+        setMessage("Player 1 Won the match");
+      }
+      else{
+        setWinner(2);
+        setMessage("Player 2 Won the match");
+      }
+      dispatch(dismountCard());
     }
   };
 
@@ -97,29 +85,73 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const cardHandler = (event) => {
     let target = event.currentTarget;
     let player = target.dataset.player;
+    console.log(target.dataset.id,target.dataset.player,currentPlayer,ready);
     
-    if(player === '1') {
-      let cards = document.querySelectorAll('.card-1');
-      cards.forEach((card,i) => {
-        if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
-        else if(card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
-          card.style.translate = '0 1rem';
-          dispatch(mountCard({player, id: card.dataset.id}))
+    if (winner===null && ready) {
+      console.log(player,currentPlayer);
+      if(player == 1 && currentPlayer==1) {
+        let cards = document.querySelectorAll('.card-1');
+        let id = target.dataset.id-1;
+
+        let last = 0;
+        for (let i = 0; i < board[1].length; i++) {
+          const el = board[1][i];
+          if (el>last) last = el;
         }
-      })
+        last+=1;
+        console.log(id,last,board[0][id]);
+        if (board[0][id]===0){
+          const newBoard = board;
+          newBoard[0][id] = last;
+          setBoard(newBoard);
+          setPlayerChance(2);
+          // dispatch(dismountCard());
+        }
+        else{
+          notify("Card Already Taken");
+        }
+
+      }
+      else if(player == 2  && currentPlayer==2) {
+        let cards = document.querySelectorAll('.card-2');
+        let id = target.dataset.id-1;
+        let last = 0;
+        for (let i = 0; i < board[1].length; i++) {
+          const el = board[1][i];
+          if (el>last) last = el;
+        }
+        last+=1;
+        console.log(id,last,board[0][id]);
+        if (board[1][id]===0){
+          const newBoard = board;
+          newBoard[1][id] = last;
+          setBoard(newBoard);
+          setPlayerChance(1);
+          // dispatch(dismountCard());
+        }
+        else{
+          notify("Card Already Taken");
+        }
+        // cards.forEach((card,i) => {
+        //   // if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
+        //   // else 
+        //   if (card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
+        //     card.style.translate = '0 1rem';
+        //     dispatch(mountCard({player, id: card.dataset.id}))
+        //   }
+        // })
+      }
+      
     }
     
-    if(player === '2') {
-      let cards = document.querySelectorAll('.card-2');
-      cards.forEach((card,i) => {
-        if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
-        else if(card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
-          card.style.translate = '0 1rem';
-          dispatch(mountCard({player, id: card.dataset.id}))
-        }
-      })
-    }
   }
+
+  let cards1 =[];
+  useEffect(()=>{
+    cards1 = getRandomIndex(sortedpokeData);
+    // console.log(uC1);
+    // console.log(uC2);
+  },[]);
 
   // Functin for checking for winner when player alternates ...
   useEffect(() => {
@@ -142,9 +174,8 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     });
     socket.on("reset-board", () => {
       setBoard([
-        ["", "", ""],
-        ["", "", ""],
-        ["", "", ""],
+        [0, 0, 0],
+        [0, 0, 0]
       ]);
       setPlayerChance(1);
       setWinner(null);
@@ -160,7 +191,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
 
   // Notification and Loader Delta W.R.T message ...
   useEffect(() => {
-
     // Loader Display ..
     let loader = document.querySelector('#loader');
     if(message === "Waiting For Player - 2 to Join") {
@@ -174,144 +204,166 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     };
   }, [message]);
 
-  // console.log(currentPlayer, playerChance, "currentPlayer", "playerChance");
 
-  const cards = new Array(3).fill(1);
+  const empCards = new Array(3).fill(1);
 
-  function getRandomIndex(array) {
-    return Math.floor(Math.random() * array.length);
+  function getRandomIndex() {
+    let taken = [];
+    let cards = []
+    while (taken.length!==3) {
+      let ind = Math.floor(Math.random() * sortedpokeData.length);
+      let fl = 1
+      for (let i = 0; i < taken.length; i++) {
+        if (taken[i]===ind) fl = 0;
+      }
+      if (fl){
+        taken.push(ind);
+        cards.push(sortedpokeData[ind]);
+      }
+    }
+    setuC1(cards);
+    let crd = uC1;
+    for (let i = 0; i < cards.length; i++) {
+      crd.push(cards[i]);
+    }
+    setuC2(crd);
+    // if (currentPlayer==2) {
+    //   setuC2(cards);
+    // }
+    return cards
   }
-
-  const cards1 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
-  const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
+  
+  // const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
+  // console.log(card2);
 
   return (
-    <Fade cascade>
-      <div className='py-[2rem] w-screen h-fit'>
-        {/* Header Section (Details) ... */}
-        <section className={classNames({
-          'relative h-fit flex justify-between items-center w-screen px-10 mb-6': true,
-          'nav-bar:flex-col nav-bar:gap-8': true,
+    <div className='py-[2rem] w-screen h-fit'>
+    {/* {console.log({board})}; */}
+      {/* {console.log(uC1)};
+      {console.log(uC2)}; */}
+      {/* Header Section (Details) ... */}
+      <section className={classNames({
+        'relative h-fit flex justify-between items-center w-screen px-10 mb-6': true,
+        'nav-bar:flex-col nav-bar:gap-8': true,
+      })}>
+        {/* Messages ... */}
+        <div className='flex justify-start items-start gap-4 h-[100%] relative'>
+          <div className='flex top-bar:flex-col top-bar:items-start justify-start items-center gap-4 h-[100%] nav-bar:items-center'>
+            <p className='text-md max-sm:text-sm'>{message}</p>
+            <Loader />
+          </div>
+          {message === "Let's play" && <p>Player {playerChance}'s Turn</p>}
+        </div>
+        <div className='flex top-bar:flex-col justify-end items-center gap-4'>
+          {/* Room Id ... */}
+          <h3 className='text-md max-sm:text-sm'>
+            Room Id:&nbsp;&nbsp;
+            <code
+              className={classNames({
+                'text-[#bb86fc] text-md bg-[#1a1a1a]': true,
+                "hover:bg-[#bb86fc] hover:text-[#1a1a1a]": true,
+                'px-1 py-1': true,
+                'transition-all duration-300 ease-in-out': true,
+                'cursor-pointer': true,
+                'max-sm:text-sm': true,
+              })}
+              onClick={() => {
+                navigator.clipboard.writeText(roomid);
+                notify("Room Id Copied to Clipboard");
+              }}
+            >
+              {roomid}
+            </code>
+          </h3>
+          {/* Reset Button ... */}
+          {/* <button className='text-md max-sm:text-sm' onClick={resethandler}>
+            Reset the board
+          </button> */}
+        </div>
+      </section>
+      
+      {/* Game Board Section ... */}
+      <section className='w-screen h-[calc(100vh-122px)] relative'>
+        <div className={classNames({
+          "h-full px-10 mb-10": true,
+          'flex justify-between items-start': true,
+          "max-lg:flex-col max-lg:gap-[7.5rem] max-lg:px-7": true,
+          "card:flex-col card:gap-[7.5rem] mobile:gap-[3rem]": true,
         })}>
-          {/* Messages ... */}
-          <div className='flex justify-start items-start gap-4 h-[100%] relative'>
-            <div className='flex top-bar:flex-col top-bar:items-start justify-start items-center gap-4 h-[100%] nav-bar:items-center'>
-              <p className='text-md max-sm:text-sm'>{message}</p>
-              <Loader />
-            </div>
-            {message === "Let's play" && <p>Player {playerChance}'s Turn</p>}
-          </div>
-          <div className='flex top-bar:flex-col justify-end items-center gap-4'>
-            {/* Room Id ... */}
-            <h3 className='text-md max-sm:text-sm'>
-              Room Id:&nbsp;&nbsp;
-              <code
-                className={classNames({
-                  'text-[#bb86fc] text-md bg-[#1a1a1a]': true,
-                  "hover:bg-[#bb86fc] hover:text-[#1a1a1a]": true,
-                  'px-1 py-1': true,
-                  'transition-all duration-300 ease-in-out': true,
-                  'cursor-pointer': true,
-                  'max-sm:text-sm': true,
-                })}
-                onClick={() => {
-                  navigator.clipboard.writeText(roomid);
-                  notify("Room Id Copied to Clipboard");
-                }}
-              >
-                {roomid}
-              </code>
-            </h3>
-            {/* Reset Button ... */}
-            <button className='text-md max-sm:text-sm' onClick={resethandler}>
-              Reset the board
-            </button>
-          </div>
-        </section>
-        
-        {/* Game Board Section ... */}
-        <section className='w-screen h-[calc(100vh-122px)] relative'>
+
+          {/* Player 1 ... */}
           <div className={classNames({
-            "h-full px-10 mb-10": true,
-            'flex justify-between items-start': true,
-            "max-lg:flex-col max-lg:gap-[7.5rem] max-lg:px-7": true,
-            "card:flex-col card:gap-[7.5rem] mobile:gap-[3rem]": true,
+            'w-fit h-full': true,
+            "flex flex-col justify-start items-start gap-6": true,
+            "max-lg:w-[90vw]": true,
           })}>
-  
-            {/* Player 1 ... */}
-            <div className={classNames({
-              'w-fit h-full': true,
-              "flex flex-col justify-start items-start gap-6": true,
-              "max-lg:w-[90vw]": true,
-            })}>
-              <h4 className={playerChance == 1 ? "currentChance" : ""}>
-                Player 1
-              </h4>
-              <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-                {cards1.map((el,i) => {
-                return (
-                  <div 
-                    key={i} 
-                    data-id={i+1} 
-                    data-player={1}
-                    className={classNames({
-                      'card-1 flex flex-grow-1': true,
-                      'w-[8.75rem] h-[12rem] cursor-pointer': true,
-                      'bg-white shadow-md rounded-md': true,
-                      'bg-center bg-cover bg-no-repeat': true,
-                      'transition all ease-in-out duration-300': true,
-                      'hover:scale-110': true,
-                      'mobile:w-[7rem] mobile:h-[10rem]': true,
-                    })} 
-                    style={{
-                      backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
-                    }}
-                    onClick={cardHandler}
-                  />
-                )
-              })}
-              </div>
-            </div>
-  
-            {/* Player 2 ... */}
-            <div className={classNames({
-              'relative w-fit h-full': true,
-              'flex flex-col justify-start items-start gap-6': true,
-              "max-lg:w-[90vw] max-lg:items-end": true,
-              'max-sm:w-fit max-sm:mr-[10rem]': true,
-              "card:items-start card:w-[90vw]": true,
-            })}>
-              <h4 className={playerChance == 2 ? "currentChance" : "" + 'flex w-full justify-end card:justify-start'}>
-                Player 2
-              </h4>
-              <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-                {cards2.map((el,i) => {
-                return (
-                  <div 
-                    key={i} 
-                    data-id={i+1} 
-                    data-player={2}
-                    className={classNames({
-                      'card-2 flex flex-grow-1': true,
-                      'w-[8.75rem] h-[12rem] cursor-pointer': true,
-                      'bg-white shadow-md rounded-md': true,
-                      'bg-center bg-cover bg-no-repeat': true,
-                      'transition all ease-in-out duration-300': true,
-                      'hover:scale-110': true,
-                      'mobile:w-[7rem] mobile:h-[10rem]': true,
-                    })} 
-                    style={{
-                      backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.imgSrc}')`
-                    }}
-                    onClick={cardHandler}
-                  />
-                )
-              })}
-              </div>
+            <h4 className={playerChance == 1 ? "currentChance" : ""}>
+              Player 1
+            </h4>
+            <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
+              {(currentPlayer===1 ? uC1 : empCards).map((el,i) => {
+              return (
+                <div 
+                  key={i} 
+                  data-id={i+1} 
+                  data-player={1}
+                  className={classNames({
+                    'card-1 flex flex-grow-1': true,
+                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'bg-white shadow-md rounded-md': true,
+                    'bg-center bg-cover bg-no-repeat': true,
+                    'transition all ease-in-out duration-300': true,
+                    'hover:scale-110': true,
+                    'mobile:w-[7rem] mobile:h-[10rem]': true,
+                  })} 
+                  style={{
+                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
+                  }}
+                  onClick={cardHandler}
+                />
+              )
+            })}
             </div>
           </div>
-        </section>
-      </div>
-    </Fade>
+
+          {/* Player 2 ... */}
+          <div className={classNames({
+            'relative w-fit h-full': true,
+            'flex flex-col justify-start items-start gap-6': true,
+            "max-lg:w-[90vw] max-lg:items-end": true,
+            'max-sm:w-fit max-sm:mr-[10rem]': true,
+            "card:items-start card:w-[90vw]": true,
+          })}>
+            <h4 className={playerChance == 2 ? "currentChance" : "" + 'flex w-full justify-end card:justify-start'}>
+              Player 2
+            </h4>
+            <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
+              {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
+              return (
+                <div 
+                  key={i} 
+                  data-id={i+1} 
+                  data-player={2}
+                  className={classNames({
+                    'card-2 flex flex-grow-1': true,
+                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'bg-white shadow-md rounded-md': true,
+                    'bg-center bg-cover bg-no-repeat': true,
+                    'transition all ease-in-out duration-300': true,
+                    'hover:scale-110': true,
+                    'mobile:w-[7rem] mobile:h-[10rem]': true,
+                  })} 
+                  style={{
+                    backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.imgSrc}')`
+                  }}
+                  onClick={cardHandler}
+                />
+              )
+            })}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

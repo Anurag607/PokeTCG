@@ -9,7 +9,7 @@ const LandingPage = () => {
             <Navbar />
             <div className="lg:flex lg:justify-center lg:items-center lg:pt-8 px-10">
                 <Fade left cascade>
-                    <div className="lg:w-[800px] container pt-10">
+                    <div className="lg:w-[800px] pt-10">
                         <h1 className="font-[1000] xl:text-[3rem] lg:text-[2rem] md:text-[3.2rem] text-3xl lg:w-[79%] text-white xl:leading-[3.25rem] md:leading-[3rem]">
                             <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#a0b849] to-[#54c3d7]">
                                 Trade, Collect, Conquer: {" "}

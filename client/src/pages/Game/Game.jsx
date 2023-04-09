@@ -10,7 +10,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import { useNavigate } from 'react-router-dom';
 import { Fade } from "react-awesome-reveal";
 
-const socket = io("http://localhost:5000");
+const socket = io("http://localhost:5001");
 
 function App() {
   const [roomid, setRoomid] = useState(null);

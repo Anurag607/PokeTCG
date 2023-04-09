@@ -15,10 +15,20 @@ module.exports = {
         header: "64px auto", //for the navbar layout
       },
       screens: {
+        "max-sm": { 'max': '640px' },
+        // => @media (max-width: 640px) { ... }
         "max-md": { 'max': '767px' },
         // => @media (max-width: 767px) { ... }
-        "filter-search-bar": { 'max': '600px' },
-        // => @media (max-width: 600px) { ... }
+        "max-lg": { 'min': '507px', 'max': '1035px' },
+        // => @media (min-width: 507px, max-width: 1035px) { ... }
+        "top-bar": { 'max': '700px' },
+        // => @media (max-width: 700px) { ... }
+        "card": { 'max': '507px' },
+        // => @media (max-width: 507px) { ... }
+        "mobile": { 'max': '380px' },
+        // => @media (max-width: 380px) { ... }
+        "nav-bar": { 'max': '450px' },
+        // => @media (max-width: 450px) { ... }
       },
     },
   },

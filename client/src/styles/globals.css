@@ -7,9 +7,12 @@ html,
 body {
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
+  cursor: default;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
+
 
 a {
   color: #7dd3fc;
@@ -50,4 +53,36 @@ body {
   background-color: #37474f;
   border: 2px solid #37474f;
   /* creates padding around scroll thumb */
+}
+
+/* Loader ... */
+.loader {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loader__element {
+  border-radius: 100%;
+  border: 3.5px solid #e8e8e8;
+}
+
+.loader__element:nth-child(1) {
+  animation: preloader .6s ease-in-out alternate infinite;
+}
+
+.loader__element:nth-child(2) {
+  animation: preloader .6s ease-in-out alternate .2s infinite;
+}
+
+.loader__element:nth-child(3) {
+  animation: preloader .6s ease-in-out alternate .4s infinite;
+}
+
+@keyframes preloader {
+  100% {
+    transform: scale(1.25);
+  }
 }

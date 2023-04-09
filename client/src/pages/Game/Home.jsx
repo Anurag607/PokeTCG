@@ -20,8 +20,8 @@ export default function Home({ setRoomid }) {
   return (
     <>
       <div className='home'>
-        <div className={"flex flex-col justify-center items-center gap-14"}>
-          <div className='buttons'>
+        <div className={"flex justify-center items-center gap-14"}>
+          <div className={"flex justify-center items-center flex-wrap w-fit h-fit gap-6"}>
             <button onClick={() => setSelected("create")}>
               {createRoomLoading ? "Loading.." : "Create Room"}
             </button>

@@ -3,17 +3,18 @@ import classNames from "classnames";
 import Loader from "../../components/Loader";
 import { useSelector, useDispatch } from 'react-redux'
 import { mountCard, dismountCard } from '../../../redux/reducers/selectedCardSlice.mjs'
+import sortedpokeData from "../../../data/pokeData";
 
 export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const [playerChance, setPlayerChance] = useState(1);
   const [message, setMessage] = useState("Waiting For Player - 2 to Join");
   const [ready, setReady] = useState(false);
+  const [winner, setWinner] = useState(null);
   const [board, setBoard] = useState([
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
   ]);
-  const [winner, setWinner] = useState(null);
   const dispatch = useDispatch();
   const { selectedCard } = useSelector(state => state.selectedCard)
 
@@ -23,9 +24,44 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     }
   },[selectedCard])
 
+  useEffect(() => {
+    if(selectedCard.length > 0) {
+      alert(`Player: ${selectedCard[currentPlayer-1].player}, CardId: ${selectedCard[currentPlayer-1].id}`)
+    }
+  },[selectedCard])
+
+  // const card1 = selectedCard[0];
+  // const card2 = selectedCard[1];
+
+  const card1 = {
+    "hp": 78,
+    "imgSrc": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg",
+    "pokeName": "Charizard",
+    "statAttack": 84,
+    "statDefense": 78,
+    "statSpeed": 100
+  }
+  const card2 = {
+      "hp": 90,
+      "imgSrc": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/62.svg",
+      "pokeName": "Poliwrath",
+      "statAttack": 95,
+      "statDefense": 95,
+      "statSpeed": 70
+  }
   // Function for determining winner ...
   const winnerHandler = () => {
-
+    let p1 = (card1.hp+card1.statAttack+card1.statDefense+card1.statSpeed)/4;
+    let p2 = (card2.hp+card2.statAttack+card2.statDefense+card2.statSpeed)/4;
+    if (p1>p2){
+      setWinner(1);
+      setMessage("Player 1 Won the match");
+    }
+    else{
+      setWinner(2);
+      setMessage("Player 2 Won the match");
+    }
+    dispatch(dismountCard());
   };
 
   // // OnClick handler for Play Button ...
@@ -153,6 +189,16 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
 
   const cards = new Array(3).fill(1);
 
+  function getRandomIndex(array) {
+    return Math.floor(Math.random() * array.length);
+  }
+
+  const cards1 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
+  const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
+
+  console.log(cards1);
+  console.log(cards2);
+
   return (
     <div className='py-[2rem] w-screen h-fit'>
       
@@ -216,7 +262,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 1
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {cards.map((el,i) => {
+              {cards1.map((el,i) => {
               return (
                 <div 
                   key={i} 
@@ -232,7 +278,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url(${currentPlayer !== 1} ? '/card.jpg' : '')`
+                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
                   }}
                   onClick={cardHandler}
                 />
@@ -253,7 +299,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               Player 2
             </h4>
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
-              {cards.map((el,i) => {
+              {cards2.map((el,i) => {
               return (
                 <div 
                   key={i} 
@@ -269,7 +315,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('${currentPlayer !== 2 ? '/card.jpg' : el.image}')`
+                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
                   }}
                   onClick={cardHandler}
                 />

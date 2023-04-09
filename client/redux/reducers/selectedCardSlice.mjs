@@ -19,7 +19,7 @@ const selectedCardSlice = createSlice({
             if (!flag) temp.push(action.payload)
             state.selectedCard = temp
         },
-        dismountCard: (state, action) => {
+        dismountCard: (state) => {
             state.selectedCard = []
         }
     },

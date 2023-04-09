@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { mountCard, dismountCard } from '../../../redux/reducers/selectedCardSlice.mjs'
 import sortedpokeData from "../../../data/pokeData";
 import { Fade } from "react-awesome-reveal";
+import Card from "../../components/Card";
 
 export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const [playerChance, setPlayerChance] = useState(1);
@@ -303,13 +304,14 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
               {(currentPlayer===1 ? uC1 : empCards).map((el,i) => {
               return (
+                <>
                 <div 
                   key={i} 
                   data-id={i+1} 
                   data-player={1}
                   className={classNames({
-                    'card-1 flex flex-grow-1': true,
-                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
+                    'card-1 flex ': true,
+                    // 'w-[8.75rem] h-[12rem] cursor-pointer': true,
                     'bg-white shadow-md rounded-md': true,
                     'bg-center bg-cover bg-no-repeat': true,
                     'transition all ease-in-out duration-300': true,
@@ -317,10 +319,16 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                     'mobile:w-[7rem] mobile:h-[10rem]': true,
                   })} 
                   style={{
-                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`
+                    backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
+                    width: "25%"
                   }}
                   onClick={cardHandler}
-                />
+                >
+                  {/* hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price */}
+                  <Card key={i} hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} />
+                </div>
+                </>
+
               )
             })}
             </div>
@@ -340,6 +348,7 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
             <div className='flex flex-wrap justify-start items-start w-fit h-fit gap-3'>
               {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
               return (
+                
                 <div 
                   key={i} 
                   data-id={i+1} 

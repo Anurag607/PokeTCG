@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import Loader from "../../components/Loader";
 import { useSelector, useDispatch } from 'react-redux'
-import { mountCard, dismountCard } from '../../../redux/reducers/selectedCardSlice.mjs'
+import { dismountCard } from '../../../redux/reducers/selectedCardSlice.mjs'
 import sortedpokeData from "../../../data/pokeData";
-import { Fade } from "react-awesome-reveal";
 import Card from "../../components/Card";
 
 export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
@@ -18,29 +17,9 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   const dispatch = useDispatch();
   const { selectedCard } = useSelector(state => state.selectedCard)
 
-  // const card1 = selectedCard[0];
-  // const card2 = selectedCard[1];
-
-  const card1 = {
-    "hp": 78,
-    "imgSrc": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg",
-    "pokeName": "Charizard",
-    "statAttack": 84,
-    "statDefense": 78,
-    "statSpeed": 100
-  }
-  const card2 = {
-      "hp": 90,
-      "imgSrc": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/62.svg",
-      "pokeName": "Poliwrath",
-      "statAttack": 95,
-      "statDefense": 95,
-      "statSpeed": 70
-  }
   // Function for determining winner ...
   const winnerHandler = () => {
     let allTk = 1;
-    console.log(board);
     for (let i = 0; i < 2; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[i][j]===0) allTk = 0;
@@ -49,8 +28,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     if (allTk) {
       let p1 = 0;
       let p2 = 0;
-      console.log(uC1);
-      console.log(uC2);
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
           if (board[0][i]===board[1][j]){
@@ -73,20 +50,10 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
     }
   };
 
-  // OnClick handler for Reset Button ...
-  const resethandler = () => {
-    if (ready === false) {
-      notify("Waiting For Player - 2 to Join");
-      return;
-    }
-    socket.emit("reset", roomid);
-  };
-
   // OnClick handler for Card Button ...
   const cardHandler = (event) => {
     let target = event.currentTarget;
     let player = target.dataset.player;
-    console.log(target.dataset.id,target.dataset.player,currentPlayer,ready);
     
     if (winner===null && ready) {
       if (currentPlayer === player-'0') target.style.translate = "0 1.1rem";
@@ -101,13 +68,11 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
           if (el>last) last = el;
         }
         last+=1;
-        console.log(id,last,board[0][id]);
         if (board[0][id]===0){
           const newBoard = board;
           newBoard[0][id] = last;
           setBoard(newBoard);
           setPlayerChance(2);
-          // dispatch(dismountCard());
         }
         else{
           notify("Card Already Taken");
@@ -123,25 +88,15 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
           if (el>last) last = el;
         }
         last+=1;
-        console.log(id,last,board[0][id]);
         if (board[1][id]===0){
           const newBoard = board;
           newBoard[1][id] = last;
           setBoard(newBoard);
           setPlayerChance(1);
-          // dispatch(dismountCard());
         }
         else{
           notify("Card Already Taken");
         }
-        // cards.forEach((card,i) => {
-        //   // if(card.dataset.id !== target.dataset.id) card.style.translate = '0 0rem';
-        //   // else 
-        //   if (card.dataset.id === target.dataset.id && currentPlayer === parseInt(card.dataset.player)) {
-        //     card.style.translate = '0 1rem';
-        //     dispatch(mountCard({player, id: card.dataset.id}))
-        //   }
-        // })
       }
       
     }
@@ -151,8 +106,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
   let cards1 =[];
   useEffect(()=>{
     cards1 = getRandomIndex(sortedpokeData);
-    // console.log(uC1);
-    // console.log(uC2);
   },[]);
 
   // Functin for checking for winner when player alternates ...
@@ -229,24 +182,15 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
       crd.push(cards[i]);
     }
     setuC2(crd);
-    // if (currentPlayer==2) {
-    //   setuC2(cards);
-    // }
     return cards
   }
 
   useEffect(() => {
     notify(`Player ${playerChance}'s Turn`);
   }, [playerChance])
-  
-  // const cards2 = Array.from({ length: 3 }, () => sortedpokeData[getRandomIndex(sortedpokeData)]);
-  // console.log(card2);
 
   return (
     <div className='py-[2rem] w-screen h-fit'>
-    {/* {console.log({board})}; */}
-      {/* {console.log(uC1)};
-      {console.log(uC2)}; */}
       {/* Header Section (Details) ... */}
       <section className={classNames({
         'relative h-fit flex justify-between items-center w-screen px-10 mb-6': true,
@@ -281,10 +225,6 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
               {roomid}
             </code>
           </h3>
-          {/* Reset Button ... */}
-          {/* <button className='text-md max-sm:text-sm' onClick={resethandler}>
-            Reset the board
-          </button> */}
         </div>
       </section>
       
@@ -327,32 +267,9 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                   })} 
                   style={{
                     backgroundImage: "url('/card.jpg')",
-                    // backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
                   }}
                   onClick={cardHandler}
                 />}
-                {/* <Card hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} hidden={(currentPlayer!==1 && (board[1][0]!=(i+1) && board[1][0]!=(i+1) && board[1][0]!=(i+1))) ? true : false} /> */}
-                {/* <div 
-                  key={i} 
-                  data-id={i+1} 
-                  data-player={1}
-                  className={classNames({
-                    'card-1 flex ': true,
-                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
-                    'bg-white shadow-md rounded-md': true,
-                    'bg-center bg-cover bg-no-repeat': true,
-                    'transition all ease-in-out duration-300': true,
-                    'hover:scale-110': true,
-                    'mobile:w-[7rem] mobile:h-[10rem]': true,
-                  })} 
-                  style={{
-                    backgroundImage: url('/card.jpg'),
-                    // backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
-                  }}
-                  onClick={cardHandler}
-                > */}
-                  {/* <Card key={i} hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} hidden={true} /> */}
-                {/* </div> */}
                 </div>
 
               )
@@ -393,34 +310,8 @@ export default function Room({ roomid, socket, currentPlayer, notify, toast }) {
                   })} 
                   style={{
                     backgroundImage: "url('/card.jpg')",
-                    // backgroundImage: `url('${currentPlayer !== 1 ? '/card.jpg' : el.imgSrc}')`,
                   }}
-                  // onClick={cardHandler}
                 />}
-              {/* {(currentPlayer===2 ? uC1 : empCards).map((el,i) => {
-              return (
-                <div key={i} 
-                  data-id={i+1} 
-                  data-player={2} onClick={cardHandler} >
-                <Card hp={el.hp} imgSrc={el.imgSrc} pokeName={el.pokeName} statSpeed={el.statSpeed} statAttack={el.statAttack} statDefense={el.statDefense} hidden={(currentPlayer!==2 && (board[0][0]!=(i+1) && board[0][0]!=(i+1) && board[0][0]!=(i+1))) ? true : false}  /> */}
-                {/* <div 
-                  key={i} 
-                  data-id={i+1} 
-                  data-player={2}
-                  className={classNames({
-                    'card-2 flex flex-grow-1': true,
-                    'w-[8.75rem] h-[12rem] cursor-pointer': true,
-                    'bg-white shadow-md rounded-md': true,
-                    'bg-center bg-cover bg-no-repeat': true,
-                    'transition all ease-in-out duration-300': true,
-                    'hover:scale-110': true,
-                    'mobile:w-[7rem] mobile:h-[10rem]': true,
-                  })} 
-                  style={{
-                    backgroundImage: `url('${(currentPlayer !== 2) ? '/card.jpg' : ''}')`,
-                  }}
-                  onClick={cardHandler}
-                /> */}
                 </div>
               )
             })}

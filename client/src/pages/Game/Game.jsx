@@ -10,7 +10,17 @@ import { useAddress } from "@thirdweb-dev/react";
 import { useNavigate } from 'react-router-dom';
 import { Fade } from "react-awesome-reveal";
 
-const socket = io("http://localhost:5001");
+const socket = io(import.meta.env.VITE_SOCKET_ENDPOINT, {
+  transportOptions: {
+    polling: {
+      extraHeaders: {
+        "Content-Type": "application/json",
+        "X-Requested-With":"XMLHttpRequest"
+
+      }
+    }
+  }
+});
 
 function App() {
   const [roomid, setRoomid] = useState(null);

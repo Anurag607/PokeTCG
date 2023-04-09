@@ -1,16 +1,29 @@
-const express = require("express");
+import express from "express"
+import cors from "cors"
+import http from "http"
+import { Server } from 'socket.io'
+
 const app = express();
-const http = require("http");
-const cors = require("cors");
 app.use(cors());
-const { Server } = require("socket.io");
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "https://poketcg.onrender.com",
-    methods: ["GET", "POST"]
+    methods: ["GET", "OPTIONS", "POST", "PUT"],
   },
+  handlePreflightRequest: (req, res) => {
+    res.writeHead(200, {
+      "Access-Control-Allow-Origin": "https://poketcg.onrender.com",
+      "Access-Control-Allow-Headers": "X-Requested-With",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "PUT, GET, POST, DELETE, OPTIONS",
+    });
+    res.end();
+  }
 });
+
+
 io.on("connection", (server) => {
   console.log("a user connected", io.engine.clientsCount);
   server.on("join-room", (roomId) => {

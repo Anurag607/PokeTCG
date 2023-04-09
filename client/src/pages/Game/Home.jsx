@@ -8,6 +8,8 @@ import { setUserNFTs } from "../../../redux/reducers/userNFTs.mjs";
 import Card from "../../components/Card";
 import BuyButton from "../../components/BuyButton";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/Loader";
+import { getAddress } from "ethers/lib/utils";
 
 export default function Home({ setRoomid }) {
   const [selected, setSelected] = useState(null);
@@ -21,7 +23,7 @@ export default function Home({ setRoomid }) {
   const {data , isLoading, error} = useListings(contract);
   const navigate = useNavigate()
 
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     if (selected === "create") {
@@ -40,7 +42,6 @@ export default function Home({ setRoomid }) {
       return data
     }
     func().then(()=>{
-      console.log(data)
       setUserNFTS(data.nfts);
       dispatch(setUserNFTs(data.nfts));
     })
@@ -53,14 +54,11 @@ export default function Home({ setRoomid }) {
       return data
     }
     func().then(()=>{
-      console.log(data)
+      // console.log(data)
       setUserNFTS(data.nfts);
       dispatch(setUserNFTs(data.nfts));
     })
   }, [])
-
-  console.log("user");
-  console.log(userNFTs);
 
   return (
     <Fade cascade>
@@ -84,7 +82,7 @@ export default function Home({ setRoomid }) {
         </div>
         {selected == "join" && (
           <form
-            className='w-screen flex justify-center items-center mt-3'
+            className='w-screen flex justify-center flex-wrap items-center mt-3 gap-2'
             onSubmit={(e) => {
               e.preventDefault();
               setJoinRoomLoading(true);
@@ -106,13 +104,23 @@ export default function Home({ setRoomid }) {
         )}
       </div>
       <div className="card-container">
-        {userNFTs && data && userNFTs.map((index) => {
+        {userNFTs && data ? userNFTs.map((index, i) => {
           return (
-            <div className="flex flex-col justify-center items-center gap-1 mb-10">
-              <Card pokeName={data[index].asset.name} imgSrc={data[index].asset.image} hp={data[index].asset.attributes[0].value} statAttack={data[index].asset.attributes[1].value} statDefense={data[index].asset.attributes[2].value} statSpeed={data[index].asset.attributes[3].value} price={data[index].buyoutCurrencyValuePerToken.displayValue}/>
+            <div key={i} className="flex flex-col justify-center items-center gap-1 mb-10">
+              {data[index] !== undefined && data[index] !== null && data[index].asset !== undefined && data[index].asset !== null ?
+                <Card 
+                  pokeName={data[index].asset.name} 
+                  imgSrc={data[index].asset.image} 
+                  hp={data[index].asset.attributes[0].value} 
+                  statAttack={data[index].asset.attributes[1].value} 
+                  statDefense={data[index].asset.attributes[2].value} 
+                  statSpeed={data[index].asset.attributes[3].value} 
+                  price={data[index].buyoutCurrencyValuePerToken.displayValue}
+                /> : <></>
+              }
             </div>
           )
-        })}
+        }) : <div><Loader /></div>}
       </div>
     </Fade>
   );

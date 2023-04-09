@@ -15,7 +15,7 @@ export default function Home() {
   React.useEffect(() => {
     if(address) {
       let data = getUserNFTs(address);
-      console.log(data);
+      // console.log(data);
       dispatch(setUserNFTs(data.nfts));
       navigate('/game', {replace: true});
     }

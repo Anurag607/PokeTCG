@@ -1,7 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @tailwind variants;
+
+@font-face {
+  font-family: Namco;
+  src: url(../../fonts/NamcoRegular-lgzd.ttf);
+  font-weight: 400;
+  font-style: normal;
+  font-display: block
+}
+
+.namco {
+  font-family: 'Namco', sans-serif;
+}
+
+.pressStart {
+  font-family: 'Press Start 2P', cursive;
+}
 
 html,
 body {

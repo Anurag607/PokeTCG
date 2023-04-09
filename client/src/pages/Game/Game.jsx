@@ -5,9 +5,10 @@ import Home from "./Home";
 import Room from "./Room";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
-import Navbar from "../../components/Navbar2";
+import Navbar from "../../components/Navbar";
 import { useAddress } from "@thirdweb-dev/react";
 import { useNavigate } from 'react-router-dom';
+import { Fade } from "react-awesome-reveal";
 
 const socket = io("http://localhost:5000");
 
@@ -57,7 +58,7 @@ function App() {
   }
   // console.log(player, "player");
   return (
-    <>
+    <Fade cascade>
       <Navbar />
       <div className='App'>
         <ToastContainer />
@@ -73,7 +74,7 @@ function App() {
           <Home setRoomid={setRoomid} />
         )}
       </div>
-    </>
+    </Fade>
   );
 }
 

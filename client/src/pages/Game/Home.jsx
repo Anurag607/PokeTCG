@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import '../../styles/index.css';
+import { Fade } from "react-awesome-reveal";
+import { getUserNFTs } from "../../../firebase/clientApp.mjs";
+import { useAddress } from "@thirdweb-dev/react";
+import {useDispatch, useSelector } from "react-redux";
+import { setUserNFTs } from "../../../redux/reducers/userNFTs.mjs";
 
 export default function Home({ setRoomid }) {
   const [selected, setSelected] = useState(null);
   const [createRoomLoading, setCreateRoomLoading] = useState(false);
   const [joinRoomLoading, setJoinRoomLoading] = useState(false);
+  const address = useAddress();
+  const dispatch = useDispatch();
+  const { userNFTs } = useSelector(state => state.userNFTs)
 
   useEffect(() => {
     if (selected === "create") {
@@ -16,9 +24,14 @@ export default function Home({ setRoomid }) {
     }
   }, [selected]);
 
+  useEffect(() => {
+    let data = getUserNFTs(address);
+    console.log(data);
+    dispatch(setUserNFTs(data.nfts));
+  }, [address])
 
   return (
-    <>
+    <Fade cascade>
       <div className='home'>
         <div className={"flex justify-center items-center gap-14 w-screen"}>
           <div className={"flex justify-center items-center flex-wrap w-fit h-fit gap-6 mt-[7.5rem]"}>
@@ -53,6 +66,6 @@ export default function Home({ setRoomid }) {
           </form>
         )}
       </div>
-    </>
+    </Fade>
   );
 }

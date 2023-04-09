@@ -34,7 +34,7 @@ const Card = ({hp,imgSrc,pokeName,statAttack,statDefense,statSpeed, price}) => {
           </div>
       </div>
       {/* <button className="btn">Buy</button>  */}
-      
+
     </div>
   )
 }

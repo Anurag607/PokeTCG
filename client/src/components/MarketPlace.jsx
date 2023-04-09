@@ -14,11 +14,12 @@ const MarketPlace = () => {
       <Navbar/>
       <div className="container my-12 mx-auto px-4 md:px-12">
         <div className="flex flex-wrap mx-2 lg:-mx-4">
-        {!data ? <div>Loading...</div> : data.map((pokemon) => {
+        {!data ? <div>Loading...</div> : data.map((pokemon,ind) => {
             return (
               <>
+                {/* {console.log(pokemon.asset.id)}; */}
                 <Card pokeName={pokemon.asset.name} imgSrc={pokemon.asset.image} hp={pokemon.asset.attributes[0].value} statAttack={pokemon.asset.attributes[1].value} statDefense={pokemon.asset.attributes[2].value} statSpeed={pokemon.asset.attributes[3].value} price={pokemon.buyoutCurrencyValuePerToken.displayValue}/>
-                <BuyButton id={pokemon.asset.id} amt="1" />
+                <BuyButton id={(ind+1).toString()} amt="1"  />
               </>
             )
           })}
